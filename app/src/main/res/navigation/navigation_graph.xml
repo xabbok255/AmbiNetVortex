@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/mainPosts"
-        android:name="com.xabbok.ambinetvortex.PostsFragment"
+        android:name="com.xabbok.ambinetvortex.presentation.fragments.PostsFragment"
         android:label="fragment_posts"
         tools:layout="@layout/fragment_posts" />
     <fragment
         android:id="@+id/eventsFragment"
-        android:name="com.xabbok.ambinetvortex.EventsFragment"
+        android:name="com.xabbok.ambinetvortex.presentation.fragments.EventsFragment"
         android:label="fragment_events"
         tools:layout="@layout/fragment_events" />
     <fragment
         android:id="@+id/usersFragment"
-        android:name="com.xabbok.ambinetvortex.UsersFragment"
+        android:name="com.xabbok.ambinetvortex.presentation.fragments.UsersFragment"
         android:label="fragment_users"
         tools:layout="@layout/fragment_users" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.xabbok.ambinetvortex.ProfileFragment"
+        android:name="com.xabbok.ambinetvortex.presentation.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 

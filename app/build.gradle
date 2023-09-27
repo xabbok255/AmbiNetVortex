@@ -35,6 +35,8 @@ android {
         all {
             buildConfigField "String", "BASE_URL", '"https://netomedia.ru/"'
             buildConfigField "String", "BASE_URL_API", 'BASE_URL + "api/"'
+            buildConfigField "String", "BASE_URL_AVATARS", 'BASE_URL + "avatars/"'
+            buildConfigField "String", "BASE_URL_IMAGES", 'BASE_URL + "media/"'
         }
     }
     compileOptions {
@@ -53,11 +55,36 @@ afterEvaluate {
 }
 
 dependencies {
+    //room
+    def room_ver = "2.5.0"
+    implementation "androidx.room:room-runtime:$room_ver"
+    implementation "androidx.room:room-ktx:$room_ver"
+    implementation "androidx.room:room-paging:$room_ver"
+    kapt "androidx.room:room-compiler:$room_ver"
+
+    //okhttp3
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+
+    //retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    //gson
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
     //hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation 'androidx.hilt:hilt-common:1.0.0'
     kapt("androidx.hilt:hilt-compiler:1.0.0")
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation 'androidx.hilt:hilt-work:1.0.0'
+
+    //firebase
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.1'
+
+    //worker
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
     implementation 'androidx.fragment:fragment:1.5.7'
     implementation 'com.google.android.material:material:1.9.0'

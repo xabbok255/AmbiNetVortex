@@ -1,12 +1,10 @@
-package com.xabbok.ambinetvortex
+package com.xabbok.ambinetvortex.presentation.activities
 
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import by.kirich1409.viewbindingdelegate.viewBinding
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import by.kirich1409.viewbindingdelegate.viewBinding
-import com.xabbok.ambinetvortex.BuildConfig.BASE_URL
+import com.xabbok.ambinetvortex.R
 import com.xabbok.ambinetvortex.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
