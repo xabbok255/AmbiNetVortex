@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="statusBarColor">@color/m3_ref_palette_neutral10</color>
+</resources>
