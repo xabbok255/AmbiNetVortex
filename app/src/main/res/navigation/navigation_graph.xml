@@ -26,8 +26,22 @@
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 
+    <fragment
+        android:id="@+id/AuthFragment"
+        android:name="com.xabbok.ambinetvortex.presentation.fragments.AuthFragment"
+        android:label="fragment_auth"
+        tools:layout="@layout/fragment_auth"/>
+
     <action
         android:id="@+id/action_global_eventsFragmentNav"
         app:destination="@id/eventsFragment"
         />
+
+    <action
+        android:id="@+id/action_global_authFragment"
+        app:destination="@id/AuthFragment"
+        app:enterAnim="@android:anim/fade_in"
+        app:exitAnim="@android:anim/fade_out"
+        app:popEnterAnim="@android:anim/fade_in"
+        app:popExitAnim="@android:anim/fade_out" />
 </navigation>

@@ -17,4 +17,20 @@
     <string name="like_button">Like</string>
     <string name="share">Share</string>
     <string name="views">Views</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="last_week">Last week</string>
+    <string name="login_label">Login</string>
+    <string name="password_label">Password</string>
+    <string name="submit_button_text">Submit</string>
+    <string name="check_login_password_message">Check login and password!</string>
+    <string name="check_internet_connection_text">Check internet connection!</string>
+    <string name="unknown_error_text">Unknown error!</string>
+    <string name="ok_button_text">OK</string>
+    <string name="login_to_like_message">Please login to like!</string>
+    <string name="you_cant_like_own_posts_message">You can\\\'t like your own posts!</string>
+    <string name="repeat">Repeat</string>
+    <string name="channel_remote_name">Messages</string>
+    <string name="channel_remote_description">Channel for messages</string>
+    <string name="notification_user_liked">%1$s published new post:</string>
 </resources>
