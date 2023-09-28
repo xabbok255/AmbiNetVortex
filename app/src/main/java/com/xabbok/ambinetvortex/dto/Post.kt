@@ -1,11 +1,11 @@
 package com.xabbok.ambinetvortex.dto
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import com.xabbok.ambinetvortex.BuildConfig
 import com.xabbok.ambinetvortex.utils.currentDate
-import com.xabbok.ambinetvortex.utils.epochToDate
 import com.xabbok.ambinetvortex.utils.hoursBetween
+import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 const val NON_EXISTING_POST_ID = 0L
 
@@ -21,11 +21,10 @@ data class Post(
     val authorId: Long = 0L,
     val author: String = "",
     var content: String = "",
-    val published: Long = 0L,
+    val published: Date,
     var likedByMe: Boolean = false,
     var likes: Int = 0,
     var shares: Int = 0,
-    var video: String = "",
     val authorAvatar: String = "",
     var attachment: Attachment? = null,
     var ownedByMe: Boolean = false,
@@ -45,20 +44,20 @@ data class Post(
 
     fun isPublishedToday() : Boolean {
         return hoursBetween(
-            epochToDate(published),
+            published,
             currentDate()
         ) < 24
     }
 
     fun isPublishedYesterday() : Boolean {
         return hoursBetween(
-            epochToDate(published), currentDate()
+            published, currentDate()
         ) in 24..48
     }
 
     fun isPublishedLater() : Boolean {
         return hoursBetween(
-            epochToDate(published), currentDate()
+            published, currentDate()
         ) > 48
     }
 }
@@ -67,7 +66,7 @@ fun List<FeedItem>.listWithBaseUrls(): List<FeedItem> = this.map {
     it.withBaseUrls()
 }
 
-data class Ad(
+/*data class Ad(
     override val id: Long,
     val image: String
 ) : FeedItem {
@@ -76,7 +75,7 @@ data class Ad(
             image = "${BuildConfig.BASE_URL_IMAGES}${image}",
         )
     }
-}
+}*/
 
 data class Divider(
     override val id: Long,

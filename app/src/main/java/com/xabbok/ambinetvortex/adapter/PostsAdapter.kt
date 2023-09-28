@@ -12,10 +12,8 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.xabbok.ambinetvortex.R
-import com.xabbok.ambinetvortex.databinding.CardAdBinding
 import com.xabbok.ambinetvortex.databinding.CardDividerBinding
 import com.xabbok.ambinetvortex.databinding.CardPostBinding
-import com.xabbok.ambinetvortex.dto.Ad
 import com.xabbok.ambinetvortex.dto.AttachmentType
 import com.xabbok.ambinetvortex.dto.Divider
 import com.xabbok.ambinetvortex.dto.FeedItem
@@ -30,7 +28,7 @@ class PostsAdapter(
 ) : PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(PostItemCallback()) {
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is Ad -> R.layout.card_ad
+            //is Ad -> R.layout.card_ad
             is Post -> R.layout.card_post
             is Divider -> R.layout.card_divider
             null -> error("unknown item type")
@@ -42,7 +40,7 @@ class PostsAdapter(
         payloads: List<Any>
     ) {
         when (val item = getItem(position)) {
-            is Ad -> (holder as? AdViewHolder)?.bind(item)
+            //is Ad -> (holder as? AdViewHolder)?.bind(item)
             is Post -> (holder as? PostViewHolder)?.bind(
                 item,
                 payloads.filterIsInstance(PostPayload::class.java).singleOrNull()
@@ -63,13 +61,13 @@ class PostsAdapter(
                 )
             }
 
-            R.layout.card_ad -> {
+            /*R.layout.card_ad -> {
                 AdViewHolder(
                     CardAdBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     )
                 )
-            }
+            }*/
 
             R.layout.card_divider -> {
                 DividerViewHolder(
@@ -109,11 +107,11 @@ class DividerViewHolder(private val binding: CardDividerBinding) :
     }
 }
 
-class AdViewHolder(private val binding: CardAdBinding) : RecyclerView.ViewHolder(binding.root) {
+/*class AdViewHolder(private val binding: CardAdBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(ad: Ad) {
-        binding.image.load(ad.withBaseUrls().image, R.drawable.ic_loading_placeholder)
+        binding.image.load(ad.image, R.drawable.ic_loading_placeholder)
     }
-}
+}*/
 
 class PostViewHolder(
     private val binding: CardPostBinding,
@@ -148,15 +146,15 @@ class PostViewHolder(
             //heartIcon.setImageResource(if (post.likedByMe) R.drawable.ic_baseline_favorite_red_24 else R.drawable.ic_baseline_favorite_border_24)
             //likes.text = formatNumber(post.likes)
             shareButton.text = formatNumber(post.shares)
-            postVideoGroup.visibility = if (post.video.isNotEmpty()) VISIBLE else GONE
+            postVideoGroup.visibility = if ((post.attachment?.type == AttachmentType.VIDEO) && (!post.attachment?.url.isNullOrEmpty())) VISIBLE else GONE
             more.isVisible = post.ownedByMe
             avatar.load(
-                url = post.withBaseUrls().authorAvatar,
+                url = post.authorAvatar,
                 placeholder = R.drawable.ic_avatar_placeholder,
                 //roundedCornersRadius = 36
             )
 
-            post.withBaseUrls().attachment?.takeIf { it.type == AttachmentType.IMAGE }?.let {
+            post.attachment?.takeIf { it.type == AttachmentType.IMAGE }?.let {
                 attachmentImage.visibility = VISIBLE
                 attachmentImage.load(
                     url = it.url,
@@ -189,7 +187,7 @@ class PostViewHolder(
             }
 
             attachmentImage.setOnClickListener {
-                post.withBaseUrls().attachment?.url?.let { image ->
+                post.attachment?.url?.let { image ->
                     onInteractionListener.onImageViewerFullscreen(image)
                 }
             }
@@ -215,9 +213,9 @@ class PostItemCallback : DiffUtil.ItemCallback<FeedItem>() {
             return false
 
         //временная проверка содержимого рекламы по имени изображения, а не по id
-        (oldItem as? Ad)?.let {
+        /*(oldItem as? Ad)?.let {
             return (oldItem as Ad).image == (newItem as Ad).image
-        }
+        }*/
 
 
         //временная проверка разделителя по id следующего поста, а не по своему id

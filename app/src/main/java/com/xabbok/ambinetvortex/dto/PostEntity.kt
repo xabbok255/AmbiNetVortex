@@ -4,21 +4,22 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.xabbok.ambinetvortex.utils.AttachmentConverter
+import com.xabbok.ambinetvortex.utils.DateConverter
+import java.util.Date
 
 @Entity(tableName = "PostEntity")
-@TypeConverters(AttachmentConverter::class)
+@TypeConverters(AttachmentConverter::class, DateConverter::class)
 data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String = "",
     val authorId: Long = 0L,
-    val authorAvatar: String,
+    val authorAvatar: String?,
     val content: String = "",
-    val published: Long = 0L,
+    val published: Date,
     var likedByMe: Boolean = false,
     var likes: Int = 0,
     var shares: Int = 0,
-    var video: String = "",
     //@Embedded
     var attachment: Attachment? = null,
     var visible: Boolean = true
@@ -38,7 +39,6 @@ data class PostEntity(
                     likedByMe = likedByMe,
                     likes = likes,
                     shares = shares,
-                    video = video,
                     attachment = attachment
                 )
             }
@@ -55,8 +55,7 @@ data class PostEntity(
                     likedByMe = likedByMe,
                     likes = likes,
                     shares = shares,
-                    video = video,
-                    authorAvatar = authorAvatar,
+                    authorAvatar = authorAvatar ?: "",
                     attachment = attachment,
                 )
             }

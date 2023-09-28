@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.xabbok.ambinetvortex.R
 import com.xabbok.ambinetvortex.auth.AppAuth
+import com.xabbok.ambinetvortex.dto.AttachmentType
 import com.xabbok.ambinetvortex.dto.Post
 import com.xabbok.ambinetvortex.presentation.viewmodels.PostViewModel
 import kotlinx.coroutines.launch
@@ -38,7 +39,8 @@ class OnPostInteractionListenerImpl(
                 if (post.ownedByMe) {
                     Toast.makeText(
                         fragment.requireContext(),
-                        fragment.requireContext().getString(R.string.you_cant_like_own_posts_message),
+                        fragment.requireContext()
+                            .getString(R.string.you_cant_like_own_posts_message),
                         Toast.LENGTH_LONG
                     ).show()
                 } else {
@@ -93,15 +95,21 @@ class OnPostInteractionListenerImpl(
     }
 
     override fun onVideo(post: Post, view: View) {
-        try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
-            view.context.startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Log.e(
-                "postVideo",
-                "Activity for Intent with url ${post.video.ifBlank { "NULL" }} not found"
-            )
+        if (post.attachment?.type != AttachmentType.VIDEO)
+            return
+
+        post.attachment?.url?.let { video ->
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(video))
+                view.context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Log.e(
+                    "postVideo",
+                    "Activity for Intent with url ${video.ifBlank { "NULL" }} not found"
+                )
+            }
         }
+
 
     }
 

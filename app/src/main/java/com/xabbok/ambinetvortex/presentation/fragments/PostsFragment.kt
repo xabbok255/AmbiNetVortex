@@ -3,12 +3,15 @@ package com.xabbok.ambinetvortex.presentation.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.OptIn
+import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.paging.TerminalSeparatorType
 import androidx.paging.insertSeparators
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.xabbok.ambinetvortex.R
 import com.xabbok.ambinetvortex.adapter.PostLoadingStateAdapter
@@ -23,7 +26,9 @@ import com.xabbok.ambinetvortex.utils.withLoadStateHeaderFooterAndRefreshError
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -36,6 +41,23 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
     private lateinit var adapter: PostsAdapter
     private val binding: FragmentPostsBinding by viewBinding(FragmentPostsBinding::bind)
 
+    private val badgeDrawable: BadgeDrawable by lazy {
+        val b = BadgeDrawable.create(requireActivity())
+        b.badgeGravity = BadgeDrawable.TOP_END
+        b.isVisible = false
+        b
+    }
+
+    private var scrollOnNextSubmit: Boolean = false
+        get() {
+            if (field) {
+                field = false
+                return true
+            }
+
+            return false
+        }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -44,7 +66,15 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
     }
 
     private fun setupListeners() {
+        binding.postListSwipeRefresh.setOnRefreshListener {
+            //binding.postListSwipeRefresh.isRefreshing = false
+            //viewModel.loadPosts()
+            binding.unreadMessagesButton.visibility = View.INVISIBLE
+            badgeDrawable.isVisible = false
 
+            scrollOnNextSubmit = true
+            adapter.refresh()
+        }
     }
 
     @kotlin.OptIn(FlowPreview::class)
@@ -62,6 +92,21 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             header = PostLoadingStateAdapter { adapter.retry() },
             footer = PostLoadingStateAdapter { adapter.retry() }
         )
+
+        //скроллинг при добавлении нового элемента
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            adapter.loadStateFlow.debounce(300).collectLatest {
+                if (it.refresh is LoadState.NotLoading
+                    && it.append is LoadState.NotLoading
+                ) {
+                    if (scrollOnNextSubmit) {
+                        binding.postList.postDelayed(100) {
+                            binding.postList.smoothScrollToPosition(0)
+                        }
+                    }
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             var dividerToday: Boolean

@@ -1,4 +1,4 @@
-package ru.netology.nmedia.repository
+package com.xabbok.ambinetvortex.repository
 
 import android.content.Context
 import androidx.paging.ExperimentalPagingApi
@@ -6,13 +6,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.filter
-import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.xabbok.ambinetvortex.api.ApiService
 import com.xabbok.ambinetvortex.dao.PostDao
 import com.xabbok.ambinetvortex.dao.PostRemoteKeyDao
 import com.xabbok.ambinetvortex.db.AppDb
-import com.xabbok.ambinetvortex.dto.Ad
 import com.xabbok.ambinetvortex.dto.Attachment
 import com.xabbok.ambinetvortex.dto.AttachmentType
 import com.xabbok.ambinetvortex.dto.FeedItem
@@ -22,8 +20,6 @@ import com.xabbok.ambinetvortex.dto.Post
 import com.xabbok.ambinetvortex.dto.PostEntity
 import com.xabbok.ambinetvortex.error.ApiAppError
 import com.xabbok.ambinetvortex.presentation.MediaModel
-import com.xabbok.ambinetvortex.repository.PostRemoteMediator
-import com.xabbok.ambinetvortex.repository.PostRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -36,7 +32,6 @@ import kotlinx.coroutines.sync.withLock
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import javax.inject.Inject
-import kotlin.random.Random
 
 class PostRepositoryHTTPImpl @Inject constructor(
     private val dao: PostDao,
@@ -48,7 +43,7 @@ class PostRepositoryHTTPImpl @Inject constructor(
 ) : PostRepository {
     @OptIn(ExperimentalPagingApi::class)
     override val data: Flow<PagingData<FeedItem>> = Pager(
-        config = PagingConfig(pageSize = 10, enablePlaceholders = false),
+        config = PagingConfig(pageSize = 10, enablePlaceholders = true),
         pagingSourceFactory = {
             dao.getPagingSource()
         },
@@ -67,12 +62,12 @@ class PostRepositoryHTTPImpl @Inject constructor(
             .map {
                 PostEntity.toDto(it)
             }
-            .insertSeparators { prev, _ ->
+            /*.insertSeparators { prev, _ ->
                 if (prev?.id?.rem(5) == 0L) {
                     Ad(Random.nextLong(), "figma.jpg")
                 } else
                     null
-            }
+            }*/
     }
 
     private val readMutex = Mutex()

@@ -7,9 +7,9 @@ import kotlinx.parcelize.Parcelize
 data class Attachment(
     val url: String,
     //val description: String?,
-    val type: AttachmentType,
+    val type: AttachmentType?,
 ) : Parcelable
 
 enum class AttachmentType {
-    IMAGE
+    IMAGE, VIDEO, AUDIO
 }
