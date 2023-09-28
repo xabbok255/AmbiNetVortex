@@ -1,4 +1,4 @@
-package ru.netology.nmedia.workers.di
+package com.xabbok.ambinetvortex.workers.di
 
 import android.content.Context
 import androidx.work.WorkManager
