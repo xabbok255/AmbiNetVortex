@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="statusBarColor">@color/m3_sys_color_light_primary</color>
+
+    <color name="tint_color">#999999</color>
+    <color name="tint_color_highlight">#03A9F4</color>
 </resources>

@@ -6,4 +6,15 @@
     <string name="events">Events</string>
     <string name="users">Users</string>
     <string name="profile">Profile</string>
+    <string name="error_loading">Loading error</string>
+    <string name="retry_loading">Повторить</string>
+    <string name="empty_posts">Пусто</string>
+    <string name="new_messages">New messages</string>
+    <string name="posts_author_avatar">Avatar</string>
+    <string name="post_more_menu">More</string>
+    <string name="video_preview">Video preview</string>
+    <string name="video_preview_button">Video preview button</string>
+    <string name="like_button">Like</string>
+    <string name="share">Share</string>
+    <string name="views">Views</string>
 </resources>
