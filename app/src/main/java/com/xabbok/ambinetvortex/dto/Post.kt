@@ -2,6 +2,7 @@ package com.xabbok.ambinetvortex.dto
 
 import android.os.Parcelable
 import com.xabbok.ambinetvortex.BuildConfig
+import com.xabbok.ambinetvortex.utils.atEndOfDay
 import com.xabbok.ambinetvortex.utils.currentDate
 import com.xabbok.ambinetvortex.utils.hoursBetween
 import kotlinx.parcelize.Parcelize
@@ -45,19 +46,19 @@ data class Post(
     fun isPublishedToday() : Boolean {
         return hoursBetween(
             published,
-            currentDate()
+            atEndOfDay(currentDate())
         ) < 24
     }
 
     fun isPublishedYesterday() : Boolean {
         return hoursBetween(
-            published, currentDate()
+            published, atEndOfDay(currentDate())
         ) in 24..48
     }
 
     fun isPublishedLater() : Boolean {
         return hoursBetween(
-            published, currentDate()
+            published, atEndOfDay(currentDate())
         ) > 48
     }
 }

@@ -127,19 +127,19 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
                         if (!dividerToday && next.isPublishedToday()
                         ) {
                             dividerToday = true
-                            return@insertSeparators Divider(Random.nextLong(), next)
+                            return@insertSeparators Divider(Long.MAX_VALUE, next)
                         }
 
                         if (!dividerYesterday && next.isPublishedYesterday()
                         ) {
                             dividerYesterday = true
-                            return@insertSeparators Divider(Random.nextLong(), next)
+                            return@insertSeparators Divider(Long.MAX_VALUE, next)
                         }
 
                         if (!dividerOlder && next.isPublishedLater()
                         ) {
                             dividerOlder = true
-                            return@insertSeparators Divider(Random.nextLong(), next)
+                            return@insertSeparators Divider(Long.MAX_VALUE, next)
                         }
 
                         return@insertSeparators null
