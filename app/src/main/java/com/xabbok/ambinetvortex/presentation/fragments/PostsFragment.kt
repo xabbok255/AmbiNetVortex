@@ -13,6 +13,7 @@ import androidx.paging.insertSeparators
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.ExperimentalBadgeUtils
+import com.google.android.material.snackbar.Snackbar
 import com.xabbok.ambinetvortex.R
 import com.xabbok.ambinetvortex.adapter.PostLoadingStateAdapter
 import com.xabbok.ambinetvortex.adapter.PostsAdapter
@@ -20,9 +21,9 @@ import com.xabbok.ambinetvortex.auth.AppAuth
 import com.xabbok.ambinetvortex.databinding.FragmentPostsBinding
 import com.xabbok.ambinetvortex.dto.Divider
 import com.xabbok.ambinetvortex.dto.Post
+import com.xabbok.ambinetvortex.error.ScreenState
 import com.xabbok.ambinetvortex.presentation.OnPostInteractionListenerImpl
 import com.xabbok.ambinetvortex.presentation.viewmodels.PostViewModel
-import com.xabbok.ambinetvortex.utils.withLoadStateHeaderFooterAndRefreshError
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -76,6 +77,46 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
         }
     }
 
+    private fun showError(state: ScreenState.Error) {
+        if (state.repeatAction == null) {
+
+            Snackbar.make(
+                requireContext(),
+                binding.snackBarCoordinator,
+                getString(R.string.SNACKBAR_ERROR),
+                Snackbar.LENGTH_LONG
+            )
+                .setTextMaxLines(10)
+                .setAction("OK") {
+
+                }
+                .show()
+        } else {
+            Snackbar.make(
+                requireContext(),
+                binding.snackBarCoordinator,
+                state.repeatText ?: getString(R.string.SNACKBAR_ERROR),
+                Snackbar.LENGTH_LONG
+            ).setAction(getString(R.string.repeat)) {
+                state.repeatAction.apply { this() }
+            }
+                .show()
+        }
+
+        viewModel.changeState(ScreenState.Working())
+    }
+
+    private fun showWorking(state: ScreenState.Working) {
+        if (state.moveRecyclerViewPointerToTop) {
+            scrollOnNextSubmit = true
+            viewModel.changeState(ScreenState.Working())
+        }
+    }
+
+    private fun showLoading(state: ScreenState.Loading) {
+
+    }
+
     @kotlin.OptIn(FlowPreview::class)
     @OptIn(ExperimentalBadgeUtils::class)
     private fun subscribe() {
@@ -87,8 +128,17 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             )
         )
 
-        binding.postList.adapter = adapter.withLoadStateHeaderFooterAndRefreshError(
-            header = PostLoadingStateAdapter { adapter.retry() },
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is ScreenState.Error -> showError(state)
+                is ScreenState.Loading -> showLoading(state)
+                is ScreenState.Working -> showWorking(state)
+            }
+        }
+
+
+
+        binding.postList.adapter = adapter.withLoadStateFooter(
             footer = PostLoadingStateAdapter { adapter.retry() }
         )
 
@@ -155,5 +205,14 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             }
         }
 
+        //показать snackbar ошибку при REFRESH
+        viewLifecycleOwner.lifecycleScope.launch {
+            adapter.loadStateFlow.debounce(300).collectLatest {
+                if (it.refresh is LoadState.Error) {
+                    viewModel.changeState(ScreenState.Error("", true, "Loading error, try later!",
+                        repeatAction = { adapter.refresh() }))
+                }
+            }
+        }
     }
 }

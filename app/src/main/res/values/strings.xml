@@ -43,4 +43,5 @@
     <string name="attachment_image">Attachment image</string>
     <string name="post_details_title">Details</string>
     <string name="attachment_image_preview_title">Image</string>
+    <string name="SNACKBAR_ERROR">Something went wrong, try again later</string>
 </resources>
