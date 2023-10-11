@@ -1,7 +1,6 @@
 package com.xabbok.ambinetvortex.repository
 
 import android.content.Context
-import android.widget.Toast
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -103,7 +102,7 @@ class PostRemoteMediator(
             }
             return MediatorResult.Success(posts.isEmpty())
         } catch (e: Exception) {
-            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            //Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             MediatorResult.Error(e)
         }
     }
