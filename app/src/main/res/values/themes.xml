@@ -32,5 +32,12 @@
         <item name="iconPadding">0dp</item>
     </style>
 
+    <style name="Theme.AmbiNetVortex.Black" parent="Theme.AmbiNetVortex">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="colorPrimaryDark">@color/black</item>
+    </style>
+
     <dimen name="textbutton_min_width_height">8dp</dimen>
 </resources>
