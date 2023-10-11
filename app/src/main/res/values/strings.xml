@@ -33,4 +33,14 @@
     <string name="channel_remote_name">Messages</string>
     <string name="channel_remote_description">Channel for messages</string>
     <string name="notification_user_liked">%1$s published new post:</string>
+    <string name="message_text_hint">Message text</string>
+    <string name="attachment_image_preview">Attachment preview</string>
+    <string name="clear_button">Clear</string>
+    <string name="take_image_from_gallery">Take image from gallery button</string>
+    <string name="take_photo_button">Take photo button</string>
+    <string name="label_new_post_title">New post</string>
+    <string name="label_post_edit_title">Post editing</string>
+    <string name="attachment_image">Attachment image</string>
+    <string name="post_details_title">Details</string>
+    <string name="attachment_image_preview_title">Image</string>
 </resources>

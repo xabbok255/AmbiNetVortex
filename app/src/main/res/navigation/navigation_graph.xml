@@ -9,7 +9,28 @@
         android:id="@+id/mainPosts"
         android:name="com.xabbok.ambinetvortex.presentation.fragments.PostsFragment"
         android:label="fragment_posts"
-        tools:layout="@layout/fragment_posts" />
+        tools:layout="@layout/fragment_posts" >
+        <action
+            android:id="@+id/feedFragmentToPostDetailsFragment"
+            app:destination="@id/postDetailsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/postDetailsFragment"
+        android:name="com.xabbok.ambinetvortex.presentation.fragments.FragmentPostDetails"
+        android:label="@string/post_details_title"
+        tools:layout="@layout/fragment_post_details">
+        <action
+            android:id="@+id/postDetailFragmentToEditPostFragment"
+            app:destination="@id/editPostFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
     <fragment
         android:id="@+id/eventsFragment"
         android:name="com.xabbok.ambinetvortex.presentation.fragments.EventsFragment"
@@ -32,6 +53,18 @@
         android:label="fragment_auth"
         tools:layout="@layout/fragment_auth"/>
 
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="com.xabbok.ambinetvortex.presentation.fragments.FragmentEditPost"
+        android:label=""
+        tools:layout="@layout/fragment_edit_post" />
+
+    <fragment
+        android:id="@+id/imageViewerFullscreenFragment"
+        android:name="com.xabbok.ambinetvortex.presentation.fragments.ImageViewerFullscreen"
+        android:label="@string/attachment_image_preview_title"
+        tools:layout="@layout/fragment_image_viewer" />
+
     <action
         android:id="@+id/action_global_eventsFragmentNav"
         app:destination="@id/eventsFragment"
@@ -44,4 +77,21 @@
         app:exitAnim="@android:anim/fade_out"
         app:popEnterAnim="@android:anim/fade_in"
         app:popExitAnim="@android:anim/fade_out" />
+
+    <action
+        android:id="@+id/action_global_editPostFragment"
+        app:destination="@id/editPostFragment"
+        app:enterAnim="@android:anim/fade_in"
+        app:exitAnim="@android:anim/fade_out"
+        app:popEnterAnim="@android:anim/fade_in"
+        app:popExitAnim="@android:anim/fade_out" />
+
+    <action
+        android:id="@+id/action_global_imageViewerFragment"
+        app:destination="@id/imageViewerFullscreenFragment"
+        app:enterAnim="@android:anim/fade_in"
+        app:exitAnim="@android:anim/fade_out"
+        app:popEnterAnim="@android:anim/fade_in"
+        app:popExitAnim="@android:anim/fade_out" />
+
 </navigation>

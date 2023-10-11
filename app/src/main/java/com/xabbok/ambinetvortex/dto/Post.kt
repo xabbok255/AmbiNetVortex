@@ -1,7 +1,6 @@
 package com.xabbok.ambinetvortex.dto
 
 import android.os.Parcelable
-import com.xabbok.ambinetvortex.BuildConfig
 import com.xabbok.ambinetvortex.utils.atEndOfDay
 import com.xabbok.ambinetvortex.utils.currentDate
 import com.xabbok.ambinetvortex.utils.hoursBetween
@@ -13,7 +12,7 @@ const val NON_EXISTING_POST_ID = 0L
 sealed interface FeedItem {
     val id: Long
 
-    fun withBaseUrls(): FeedItem
+    //fun withBaseUrls(): FeedItem
 }
 
 @Parcelize
@@ -22,7 +21,7 @@ data class Post(
     val authorId: Long = 0L,
     val author: String = "",
     var content: String = "",
-    val published: Date,
+    val published: Date = Date(),
     var likedByMe: Boolean = false,
     var likes: Int = 0,
     var shares: Int = 0,
@@ -36,12 +35,12 @@ data class Post(
         return if (this.id == NON_EXISTING_POST_ID) this else null
     }
 
-    override fun withBaseUrls(): Post {
+    /*override fun withBaseUrls(): Post {
         return this.copy(
             authorAvatar = "${BuildConfig.BASE_URL_AVATARS}${authorAvatar}",
             attachment = attachment?.copy(url = "${BuildConfig.BASE_URL_IMAGES}${attachment?.url}")
         )
-    }
+    }*/
 
     fun isPublishedToday() : Boolean {
         return hoursBetween(
@@ -63,9 +62,9 @@ data class Post(
     }
 }
 
-fun List<FeedItem>.listWithBaseUrls(): List<FeedItem> = this.map {
+/*fun List<FeedItem>.listWithBaseUrls(): List<FeedItem> = this.map {
     it.withBaseUrls()
-}
+}*/
 
 /*data class Ad(
     override val id: Long,
@@ -82,7 +81,4 @@ data class Divider(
     override val id: Long,
     val nextPost: Post
 ) : FeedItem {
-    override fun withBaseUrls(): FeedItem {
-        return this
-    }
 }

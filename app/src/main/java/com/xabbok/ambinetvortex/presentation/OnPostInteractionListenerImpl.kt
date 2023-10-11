@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -13,6 +14,8 @@ import com.xabbok.ambinetvortex.R
 import com.xabbok.ambinetvortex.auth.AppAuth
 import com.xabbok.ambinetvortex.dto.AttachmentType
 import com.xabbok.ambinetvortex.dto.Post
+import com.xabbok.ambinetvortex.presentation.fragments.INTENT_EXTRA_IMAGE_URI
+import com.xabbok.ambinetvortex.presentation.fragments.INTENT_EXTRA_POST
 import com.xabbok.ambinetvortex.presentation.viewmodels.PostViewModel
 import kotlinx.coroutines.launch
 
@@ -44,8 +47,7 @@ class OnPostInteractionListenerImpl(
                         Toast.LENGTH_LONG
                     ).show()
                 } else {
-                    //viewModel.likeById(post)
-                    //TODO
+                    viewModel.likeById(post)
                     return@launch
                 }
             }
@@ -53,11 +55,10 @@ class OnPostInteractionListenerImpl(
     }
 
     override fun onEdit(post: Post) {
-        /*fragment.findNavController().navigate(
+        fragment.findNavController().navigate(
             R.id.action_global_editPostFragment,
             bundleOf(Pair(INTENT_EXTRA_POST, post))
-        )*/
-        //TODO
+        )
     }
 
     override fun onShare(post: Post, view: View) {
@@ -114,21 +115,18 @@ class OnPostInteractionListenerImpl(
     }
 
     override fun onPostDetails(post: Post) {
-        /*
         fragment.findNavController().navigate(
             R.id.feedFragmentToPostDetailsFragment,
             bundleOf(Pair(INTENT_EXTRA_POST, post))
         )
-         */
-        //TODO
+
     }
 
     override fun onImageViewerFullscreen(image: String) {
-        /*fragment.findNavController().navigate(
+        fragment.findNavController().navigate(
             R.id.action_global_imageViewerFragment,
             bundleOf(Pair(INTENT_EXTRA_IMAGE_URI, image))
-        )*/
-        //TODO
+        )
     }
 
 
