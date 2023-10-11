@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class PostsFragment : Fragment(R.layout.fragment_posts) {
@@ -146,6 +145,13 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
                     }
             }.collectLatest {
                 adapter.submitData(it)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            adapter.loadStateFlow.debounce(300).collectLatest {
+                binding.postListSwipeRefresh.isRefreshing =
+                    it.refresh is LoadState.Loading
             }
         }
 
