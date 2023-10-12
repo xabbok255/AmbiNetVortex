@@ -6,9 +6,9 @@
     <string name="events">Events</string>
     <string name="users">Users</string>
     <string name="profile">Profile</string>
-    <string name="error_loading">Loading error</string>
-    <string name="retry_loading">Повторить</string>
-    <string name="empty_posts">Пусто</string>
+    <string name="error_loading">Loading error, please try again later</string>
+    <string name="retry_loading">Retry</string>
+    <string name="empty_posts">Nothing\'s here :)</string>
     <string name="new_messages">New messages</string>
     <string name="posts_author_avatar">Avatar</string>
     <string name="post_more_menu">More</string>
