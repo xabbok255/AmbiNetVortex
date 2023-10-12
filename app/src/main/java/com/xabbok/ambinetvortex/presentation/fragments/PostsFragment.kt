@@ -15,7 +15,7 @@ import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.snackbar.Snackbar
 import com.xabbok.ambinetvortex.R
-import com.xabbok.ambinetvortex.adapter.PostLoadingStateAdapter
+import com.xabbok.ambinetvortex.adapter.PostLoadStateAdapter
 import com.xabbok.ambinetvortex.adapter.PostsAdapter
 import com.xabbok.ambinetvortex.auth.AppAuth
 import com.xabbok.ambinetvortex.databinding.FragmentPostsBinding
@@ -139,7 +139,7 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
 
         binding.postList.adapter = adapter.withLoadStateFooter(
-            footer = PostLoadingStateAdapter { adapter.retry() }
+            footer = PostLoadStateAdapter { adapter.retry() }
         )
 
         //скроллинг при добавлении нового элемента
@@ -202,16 +202,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             adapter.loadStateFlow.debounce(300).collectLatest {
                 binding.postListSwipeRefresh.isRefreshing =
                     it.refresh is LoadState.Loading
-            }
-        }
-
-        //показать snackbar ошибку при REFRESH
-        viewLifecycleOwner.lifecycleScope.launch {
-            adapter.loadStateFlow.debounce(300).collectLatest {
-                if (it.refresh is LoadState.Error) {
-                    viewModel.changeState(ScreenState.Error("", true, "Loading error, try later!",
-                        repeatAction = { adapter.refresh() }))
-                }
             }
         }
     }
