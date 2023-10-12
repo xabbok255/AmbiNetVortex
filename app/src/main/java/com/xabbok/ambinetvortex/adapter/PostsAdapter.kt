@@ -2,6 +2,7 @@ package com.xabbok.ambinetvortex.adapter
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.xabbok.ambinetvortex.R
 import com.xabbok.ambinetvortex.databinding.CardDividerBinding
 import com.xabbok.ambinetvortex.databinding.CardPostBinding
+import com.xabbok.ambinetvortex.databinding.CardPostPlaceholderBinding
 import com.xabbok.ambinetvortex.dto.AttachmentType
 import com.xabbok.ambinetvortex.dto.Divider
 import com.xabbok.ambinetvortex.dto.FeedItem
@@ -26,13 +28,23 @@ import com.xabbok.ambinetvortex.utils.load
 class PostsAdapter(
     private val onInteractionListener: OnPostInteractionListener
 ) : PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(PostItemCallback()) {
-    override fun getItemViewType(position: Int): Int =
+    override fun getItemViewType(position: Int): Int {
+        Log.e("getItem", getItem(position).toString())
         when (getItem(position)) {
             //is Ad -> R.layout.card_ad
-            is Post -> R.layout.card_post
-            is Divider -> R.layout.card_divider
-            null -> error("unknown item type")
+            is Post -> {
+                return R.layout.card_post
+            }
+
+            is Divider -> {
+                return R.layout.card_divider
+            }
+
+            null -> {
+                return R.layout.card_post_placeholder
+            }
         }
+    }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
@@ -47,7 +59,7 @@ class PostsAdapter(
             )
 
             is Divider -> (holder as? DividerViewHolder)?.bind(item)
-            null -> error("unknown item type")
+            null -> (holder as? PostPlaceHolderViewHolder)?.bind()
         }
     }
 
@@ -72,6 +84,14 @@ class PostsAdapter(
             R.layout.card_divider -> {
                 DividerViewHolder(
                     CardDividerBinding.inflate(
+                        LayoutInflater.from(parent.context), parent, false
+                    )
+                )
+            }
+
+            R.layout.card_post_placeholder -> {
+                PostPlaceHolderViewHolder(
+                    CardPostPlaceholderBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     )
                 )
@@ -104,6 +124,12 @@ class DividerViewHolder(private val binding: CardDividerBinding) :
             } else return@let binding.root.resources.getString(R.string.last_week)
         }
         binding.titleText.text = dateStr
+    }
+}
+
+class PostPlaceHolderViewHolder(private  val binding: CardPostPlaceholderBinding) :  RecyclerView.ViewHolder(binding.root) {
+    fun bind() {
+
     }
 }
 
@@ -146,7 +172,8 @@ class PostViewHolder(
             //heartIcon.setImageResource(if (post.likedByMe) R.drawable.ic_baseline_favorite_red_24 else R.drawable.ic_baseline_favorite_border_24)
             //likes.text = formatNumber(post.likes)
             shareButton.text = formatNumber(post.shares)
-            postVideoGroup.visibility = if ((post.attachment?.type == AttachmentType.VIDEO) && (!post.attachment?.url.isNullOrEmpty())) VISIBLE else GONE
+            postVideoGroup.visibility =
+                if ((post.attachment?.type == AttachmentType.VIDEO) && (!post.attachment?.url.isNullOrEmpty())) VISIBLE else GONE
             more.isVisible = post.ownedByMe
             avatar.load(
                 url = post.authorAvatar,

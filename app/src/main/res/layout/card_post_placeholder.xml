@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/avatar"
+        android:layout_width="@dimen/posts_avatar_size"
+        android:layout_height="@dimen/posts_avatar_size"
+        android:contentDescription="@string/posts_author_avatar"
+        app:layout_constraintBottom_toTopOf="@id/barrierTop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/baseline_person_24_placeholder"
+        android:tint="@android:color/darker_gray"
+        app:shapeAppearanceOverlay="@style/AvatarImageView.Corner"/>
+
+    <TextView
+        android:id="@+id/author"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/posts_margins"
+        android:ellipsize="end"
+        android:singleLine="true"
+        app:layout_constraintBottom_toTopOf="@id/published"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintTop_toTopOf="@id/avatar"
+        app:layout_constraintVertical_chainStyle="packed"
+
+        android:text="placeholder_text_long_one_line_xxxxxxxxxxxxx"
+        tools:ignore="HardcodedText"
+        android:background="@android:color/darker_gray"
+        android:textColor="@android:color/transparent"/>
+
+    <TextView
+        android:id="@+id/published"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/posts_margins"
+        app:layout_constraintBottom_toBottomOf="@id/avatar"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintTop_toBottomOf="@id/author"
+        android:layout_marginTop="@dimen/posts_margins"
+        android:text="placeholder_short"
+        tools:ignore="HardcodedText"
+        android:background="@android:color/darker_gray"
+        android:textColor="@android:color/transparent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="avatar,published" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/posts_margins"
+        android:autoLink="all"
+        android:ellipsize="end"
+        android:maxLines="@integer/post_max_lines"
+        android:singleLine="false"
+        app:layout_constraintTop_toBottomOf="@id/barrierTop"
+        android:text="placeholder_text_long_one_line_xxxxxxxxxxxxx"
+        android:lines="5"
+        tools:ignore="HardcodedText"
+        android:background="@android:color/darker_gray"
+        android:textColor="@android:color/transparent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

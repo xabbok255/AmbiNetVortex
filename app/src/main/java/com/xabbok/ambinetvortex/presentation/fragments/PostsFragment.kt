@@ -3,6 +3,7 @@ package com.xabbok.ambinetvortex.presentation.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.OptIn
+import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -74,6 +75,10 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
             scrollOnNextSubmit = true
             adapter.refresh()
+        }
+
+        binding.retryButton.setOnClickListener {
+            adapter.retry()
         }
     }
 
@@ -200,8 +205,17 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             adapter.loadStateFlow.debounce(300).collectLatest {
-                binding.postListSwipeRefresh.isRefreshing =
-                    it.refresh is LoadState.Loading
+                binding.apply {
+                    postListSwipeRefresh.isRefreshing =
+                        it.refresh is LoadState.Loading || it.append is LoadState.Loading || it.prepend is LoadState.Loading
+
+                    val refreshError = it.refresh is LoadState.Error
+                    errorGroup.isVisible = refreshError
+
+                    emptyText.isVisible =
+                        it.refresh is LoadState.NotLoading && adapter.itemCount == 0
+                    postList.isVisible = !binding.emptyText.isVisible
+                }
             }
         }
     }
