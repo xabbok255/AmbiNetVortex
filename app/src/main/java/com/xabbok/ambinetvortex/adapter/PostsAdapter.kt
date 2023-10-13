@@ -21,6 +21,8 @@ import com.xabbok.ambinetvortex.dto.Divider
 import com.xabbok.ambinetvortex.dto.FeedItem
 import com.xabbok.ambinetvortex.dto.Post
 import com.xabbok.ambinetvortex.presentation.OnPostInteractionListener
+import com.xabbok.ambinetvortex.utils.formatDateWithYear
+import com.xabbok.ambinetvortex.utils.formatDateWithoutYear
 import com.xabbok.ambinetvortex.utils.formatNumber
 import com.xabbok.ambinetvortex.utils.load
 
@@ -121,13 +123,20 @@ class DividerViewHolder(private val binding: CardDividerBinding) :
                 return@let binding.root.resources.getString(R.string.today)
             } else if (post.isPublishedYesterday()) {
                 return@let binding.root.resources.getString(R.string.yesterday)
-            } else return@let binding.root.resources.getString(R.string.last_week)
+            } else if (post.isPublishedCurrentYear()){
+                //вывести дату без года
+                return@let formatDateWithoutYear(post.published)
+            } else {
+                //вывести дату с годом
+                return@let formatDateWithYear(post.published)
+            }
         }
         binding.titleText.text = dateStr
     }
 }
 
-class PostPlaceHolderViewHolder(private  val binding: CardPostPlaceholderBinding) :  RecyclerView.ViewHolder(binding.root) {
+class PostPlaceHolderViewHolder(private val binding: CardPostPlaceholderBinding) :
+    RecyclerView.ViewHolder(binding.root) {
     fun bind() {
 
     }

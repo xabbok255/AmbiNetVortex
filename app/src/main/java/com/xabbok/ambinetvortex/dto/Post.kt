@@ -3,7 +3,9 @@ package com.xabbok.ambinetvortex.dto
 import android.os.Parcelable
 import com.xabbok.ambinetvortex.utils.atEndOfDay
 import com.xabbok.ambinetvortex.utils.currentDate
+import com.xabbok.ambinetvortex.utils.getDateYear
 import com.xabbok.ambinetvortex.utils.hoursBetween
+import com.xabbok.ambinetvortex.utils.roundDateByDay
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 
@@ -42,6 +44,10 @@ data class Post(
         )
     }*/
 
+    fun roundedDate() : Date {
+        return roundDateByDay(published)
+    }
+
     fun isPublishedToday() : Boolean {
         return hoursBetween(
             published,
@@ -53,6 +59,10 @@ data class Post(
         return hoursBetween(
             published, atEndOfDay(currentDate())
         ) in 24..48
+    }
+
+    fun isPublishedCurrentYear() : Boolean {
+        return getDateYear(published) == getDateYear(currentDate())
     }
 
     fun isPublishedLater() : Boolean {

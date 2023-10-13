@@ -19,7 +19,7 @@
     <string name="views">Views</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
-    <string name="last_week">Last week</string>
+    <string name="later">Later</string>
     <string name="login_label">Login</string>
     <string name="password_label">Password</string>
     <string name="submit_button_text">Submit</string>

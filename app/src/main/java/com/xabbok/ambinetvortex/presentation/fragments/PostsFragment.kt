@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.TerminalSeparatorType
 import androidx.paging.insertSeparators
+import androidx.recyclerview.widget.ConcatAdapter
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.ExperimentalBadgeUtils
@@ -25,10 +26,13 @@ import com.xabbok.ambinetvortex.dto.Post
 import com.xabbok.ambinetvortex.error.ScreenState
 import com.xabbok.ambinetvortex.presentation.OnPostInteractionListenerImpl
 import com.xabbok.ambinetvortex.presentation.viewmodels.PostViewModel
+import com.xabbok.ambinetvortex.utils.withLoadStateHeaderFooterAndRefreshError
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -73,8 +77,9 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             binding.unreadMessagesButton.visibility = View.INVISIBLE
             badgeDrawable.isVisible = false
 
-            scrollOnNextSubmit = true
             adapter.refresh()
+            scrollOnNextSubmit = true
+
         }
 
         binding.retryButton.setOnClickListener {
@@ -143,8 +148,11 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
 
 
-        binding.postList.adapter = adapter.withLoadStateFooter(
-            footer = PostLoadStateAdapter { adapter.retry() }
+        binding.postList.adapter = adapter.withLoadStateHeaderFooterAndRefreshError(
+            footer = PostLoadStateAdapter { adapter.retry() },
+            header = PostLoadStateAdapter {
+                adapter.refresh()
+            }
         )
 
         //скроллинг при добавлении нового элемента
@@ -169,54 +177,46 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
             viewModel.data.map { pagingData ->
                 pagingData
-                    .also {
-                        dividerToday = false
-                        dividerYesterday = false
-                        dividerOlder = false
-                    }
-                    .insertSeparators(terminalSeparatorType = TerminalSeparatorType.SOURCE_COMPLETE) { _, n ->
-                        val next: Post =
-                            (if (n == null) null else (n as? Post)) ?: return@insertSeparators null
-
-                        if (!dividerToday && next.isPublishedToday()
-                        ) {
-                            dividerToday = true
-                            return@insertSeparators Divider(Long.MAX_VALUE, next)
-                        }
-
-                        if (!dividerYesterday && next.isPublishedYesterday()
-                        ) {
-                            dividerYesterday = true
-                            return@insertSeparators Divider(Long.MAX_VALUE, next)
-                        }
-
-                        if (!dividerOlder && next.isPublishedLater()
-                        ) {
-                            dividerOlder = true
-                            return@insertSeparators Divider(Long.MAX_VALUE, next)
+                    .insertSeparators(terminalSeparatorType = TerminalSeparatorType.SOURCE_COMPLETE) { before, after ->
+                        if ((before as? Post)?.roundedDate() != (after as? Post)?.roundedDate()) {
+                            return@insertSeparators Divider(Long.MAX_VALUE, (after as Post))
                         }
 
                         return@insertSeparators null
                     }
-            }.collectLatest {
+            }.collect {
                 adapter.submitData(it)
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            adapter.loadStateFlow.debounce(300).collectLatest {
+            adapter.loadStateFlow.distinctUntilChanged { oldState, loadState ->
                 binding.apply {
                     postListSwipeRefresh.isRefreshing =
-                        it.refresh is LoadState.Loading || it.append is LoadState.Loading || it.prepend is LoadState.Loading
+                        loadState.mediator?.refresh is LoadState.Loading ||
+                                loadState.mediator?.append is LoadState.Loading ||
+                                loadState.mediator?.prepend is LoadState.Loading
 
-                    val refreshError = it.refresh is LoadState.Error
-                    errorGroup.isVisible = refreshError
-
+                    //errorGroup.isVisible = loadState.mediator?.refresh is LoadState.Error
                     emptyText.isVisible =
-                        it.refresh is LoadState.NotLoading && adapter.itemCount == 0
-                    postList.isVisible = !binding.emptyText.isVisible
+                        loadState.mediator?.refresh is LoadState.NotLoading && adapter.itemCount == 0
+                    //postList.isVisible = !binding.emptyText.isVisible
+
+                    if (loadState.mediator?.refresh is LoadState.Error && oldState.mediator?.refresh !is LoadState.Error) {
+                        binding.postList.smoothScrollToPosition(0)
+                    }
+
+                    if (loadState.mediator?.append is LoadState.Error && oldState.mediator?.append !is LoadState.Error) {
+                        binding.postList.postDelayed(300) {
+                            binding.postList.smoothScrollToPosition((binding.postList.adapter as ConcatAdapter).itemCount - 1)
+                        }
+
+                    }
                 }
+
+                false
             }
+                .collect()
         }
     }
 }
