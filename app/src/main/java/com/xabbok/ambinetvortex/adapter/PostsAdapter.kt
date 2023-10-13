@@ -2,7 +2,6 @@ package com.xabbok.ambinetvortex.adapter
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -31,7 +30,6 @@ class PostsAdapter(
     private val onInteractionListener: OnPostInteractionListener
 ) : PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(PostItemCallback()) {
     override fun getItemViewType(position: Int): Int {
-        Log.e("getItem", getItem(position).toString())
         when (getItem(position)) {
             //is Ad -> R.layout.card_ad
             is Post -> {
