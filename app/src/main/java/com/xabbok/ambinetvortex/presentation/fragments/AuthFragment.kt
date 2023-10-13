@@ -26,12 +26,6 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //добавляем верхнее меню с кнопкой назад
-        /*(activity as? AppCompatActivity)?.apply {
-            setSupportActionBar(binding.toolbar)
-            setupActionBarWithNavControllerDefault()
-        }*/
-
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.viewModel = authViewModel
@@ -64,6 +58,10 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     private fun setupListeners() {
         binding.submitButton.setOnClickListener {
             authViewModel.login()
+        }
+
+        binding.actionBar.setNavigationOnClickListener {
+            findNavController().navigateUp()
         }
     }
 

@@ -44,4 +44,7 @@
     <string name="post_details_title">Details</string>
     <string name="attachment_image_preview_title">Image</string>
     <string name="SNACKBAR_ERROR">Something went wrong, try again later</string>
+    <string name="write_new_post_button_text">Write new post</string>
+    <string name="please_login_to_write_posts_message">Please login to write posts!</string>
+    <string name="authorization_text">Authorization</string>
 </resources>

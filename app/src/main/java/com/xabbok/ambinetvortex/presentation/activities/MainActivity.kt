@@ -11,6 +11,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.firebase.messaging.FirebaseMessaging
 import com.xabbok.ambinetvortex.R
 import com.xabbok.ambinetvortex.databinding.ActivityMainBinding
+import com.xabbok.ambinetvortex.utils.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onStart() {
         super.onStart()
-
+        setStatusBarColor(this)
 
         binding.bottomNav.setupWithNavController(navHostController)
 

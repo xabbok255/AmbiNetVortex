@@ -2,12 +2,15 @@ package com.xabbok.ambinetvortex.presentation.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.OptIn
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.TerminalSeparatorType
 import androidx.paging.insertSeparators
@@ -84,6 +87,27 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
         binding.retryButton.setOnClickListener {
             adapter.retry()
+        }
+
+        binding.fabNewPost.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (!appAuth.isAuth()) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.please_login_to_write_posts_message),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    findNavController().navigate(
+                        R.id.action_global_authFragment
+                    )
+                } else {
+                    findNavController().navigate(
+                        R.id.action_global_editPostFragment,
+                        bundleOf(Pair(INTENT_EXTRA_POST, Post()))
+                    )
+                    return@launch
+                }
+            }
         }
     }
 
@@ -178,6 +202,8 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             viewModel.data.map { pagingData ->
                 pagingData
                     .insertSeparators(terminalSeparatorType = TerminalSeparatorType.SOURCE_COMPLETE) { before, after ->
+                        if (before == null || after == null)
+                            return@insertSeparators null
                         if ((before as? Post)?.roundedDate() != (after as? Post)?.roundedDate()) {
                             return@insertSeparators Divider(Long.MAX_VALUE, (after as Post))
                         }
